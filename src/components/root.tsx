@@ -3,10 +3,13 @@ import { Box, Divider, Typography } from "@mui/joy";
 
 import { useOrders } from "./orders";
 import OrderList from "./order-list";
+import { clearAuction } from "./algo";
 
 const Root = () => {
   const asks = useOrders({ comparePriority: (a, b) => b.price - a.price });
   const bids = useOrders({ comparePriority: (a, b) => a.price - b.price });
+
+  const [clearingPrice, volume] = clearAuction(bids.list, asks.list);
 
   return (
     <Box>
@@ -19,11 +22,11 @@ const Root = () => {
         }}
       >
         <Box sx={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-          <OrderList title="Bids" color="success" {...asks} />
-          <OrderList title="Asks" color="danger" {...bids} />
+          <OrderList title="Asks" color="danger" {...asks} />
+          <OrderList title="Bids" color="success" {...bids} />
         </Box>
         <Divider sx={{ marginY: "24px" }} />
-        Content
+        Clearing price: {clearingPrice}; Volume: {volume}
       </Box>
     </Box>
   );
