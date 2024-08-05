@@ -6,8 +6,8 @@ import { clearAuction } from "./algo";
 import Chart from "./chart";
 
 const Root = () => {
-  const asks = useOrders({ comparePriority: (a, b) => b.price - a.price });
   const bids = useOrders({ comparePriority: (a, b) => a.price - b.price });
+  const asks = useOrders({ comparePriority: (a, b) => b.price - a.price });
 
   const { clearingPrice, clearingVolume } = clearAuction(bids.list, asks.list);
 
@@ -22,8 +22,8 @@ const Root = () => {
         }}
       >
         <Box sx={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-          <OrderList title="Asks" color="danger" {...asks} />
           <OrderList title="Bids" color="success" {...bids} />
+          <OrderList title="Asks" color="danger" {...asks} />
         </Box>
         <Divider sx={{ marginY: "24px" }} />
         <Box sx={{ marginBottom: "16px" }}>
