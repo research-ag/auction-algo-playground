@@ -1,0 +1,14 @@
+{
+  "canisters": {
+    "algo_fe": {
+      "type": "assets",
+      "source": ["dist/"],
+      "build": "npm run build:frontend",
+      "declarations": {
+        "output": "./declarations/history_fe"
+      }
+    }
+  },
+  "dfx": "0.20.1",
+  "version": 1
+}
