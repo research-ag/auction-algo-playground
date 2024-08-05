@@ -13,7 +13,7 @@ class Index {
   }
 }
 
-export function clearAuction(bids: Order[], asks: Order[]): [number, number] {
+export function clearAuction(bids: Order[], asks: Order[]) {
   let clearingPrice = 0;
   let cumulativeBidVolume = 0;
   let cumulativeAskVolume = 0;
@@ -31,10 +31,52 @@ export function clearAuction(bids: Order[], asks: Order[]): [number, number] {
     if (bidSide.isNew) cumulativeBidVolume += bid.quantity;
     if (askSide.isNew) cumulativeAskVolume += ask.quantity;
 
-    // advance indices for the next iteration
+    // Advance indices for the next iteration
     bidSide.advance(cumulativeBidVolume <= cumulativeAskVolume);
     askSide.advance(cumulativeAskVolume <= cumulativeBidVolume);
   }
 
-  return [clearingPrice, Math.min(cumulativeBidVolume, cumulativeAskVolume)];
+  return {
+    clearingPrice,
+    clearingVolume: Math.min(cumulativeBidVolume, cumulativeAskVolume),
+  };
+}
+
+export type ChartData = {
+  price: number;
+  bidVolume: number;
+  askVolume: number;
+};
+
+export function prepareChartData(bids: Order[], asks: Order[]): ChartData[] {
+  const data: ChartData[] = [];
+
+  let cumulativeBidVolume = 0;
+  let cumulativeAskVolume = 0;
+
+  // Extract unique prices from both bids and asks
+  let prices = Array.from(
+    new Set([...bids.map((b) => b.price), ...asks.map((a) => a.price)])
+  );
+
+  prices.sort((a, b) => a - b);
+
+  prices = prices.length ? [0, ...prices] : [];
+
+  for (let price of prices) {
+    cumulativeBidVolume = bids
+      .filter((order) => order.price >= price)
+      .reduce((sum, order) => sum + order.quantity, 0);
+    cumulativeAskVolume = asks
+      .filter((order) => order.price <= price)
+      .reduce((sum, order) => sum + order.quantity, 0);
+
+    data.push({
+      price,
+      bidVolume: cumulativeBidVolume,
+      askVolume: cumulativeAskVolume,
+    });
+  }
+
+  return data;
 }
