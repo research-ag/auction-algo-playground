@@ -2,7 +2,6 @@
   "name": "auction-algo-playground",
   "version": "1.0.0",
   "main": "index.js",
-  "author": "Denys Kushnarov <154005444+reginleif888@users.noreply.github.com>",
   "license": "MIT",
   "scripts": {
     "dev:frontend": "vite --port 3993 --host",

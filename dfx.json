@@ -3,10 +3,7 @@
     "algo_fe": {
       "type": "assets",
       "source": ["dist/"],
-      "build": "npm run build:frontend",
-      "declarations": {
-        "output": "./declarations/history_fe"
-      }
+      "build": "npm run build:frontend"
     }
   },
   "dfx": "0.20.1",
