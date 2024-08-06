@@ -15,6 +15,7 @@ export interface OrdersObject {
   list: Array<Order>;
   addOrder: (order: Order) => void;
   removeOrder: (index: number) => void;
+  reset: () => void;
 }
 
 interface UseOrdersParams {
@@ -104,9 +105,14 @@ export const useOrders = ({
     setList(newList);
   };
 
+  const reset = () => {
+    syncQS([]);
+    setList([]);
+  };
+
   useEffect(() => {
     parseQS();
   }, []);
 
-  return { list, addOrder, removeOrder };
+  return { list, addOrder, removeOrder, reset };
 };

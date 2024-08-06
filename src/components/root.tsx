@@ -1,4 +1,4 @@
-import { Box, Divider } from "@mui/joy";
+import { Box, Divider, Button } from "@mui/joy";
 
 import { StoreKey, useOrders } from "./orders";
 import OrderList from "./order-list";
@@ -35,12 +35,29 @@ const Root = () => {
         </Box>
         <Divider sx={{ marginY: "24px" }} />
         <Box
-          sx={{ display: "flex", alignItems: "center", marginBottom: "16px" }}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap-reverse",
+            gap: "8px",
+            marginBottom: "16px",
+          }}
         >
           <Box>
             Clearing price: {clearingPrice}; Volume: {clearingVolume}
           </Box>
-          <Box sx={{ display: "flex", gap: "8px", marginLeft: "auto" }}>
+          <Box sx={{ display: "flex", gap: "16px" }}>
+            <Button
+              size="sm"
+              variant="outlined"
+              onClick={() => {
+                bids.reset();
+                asks.reset();
+              }}
+            >
+              Clear all
+            </Button>
             <CopyButton />
           </Box>
         </Box>
