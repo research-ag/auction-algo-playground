@@ -1,13 +1,20 @@
 import { Box, Divider } from "@mui/joy";
 
-import { useOrders } from "./orders";
+import { StoreKey, useOrders } from "./orders";
 import OrderList from "./order-list";
 import { clearAuction } from "./algo";
 import Chart from "./chart";
 
 const Root = () => {
-  const bids = useOrders({ comparePriority: (a, b) => a.price - b.price });
-  const asks = useOrders({ comparePriority: (a, b) => b.price - a.price });
+  const bids = useOrders({
+    storeKey: StoreKey.BIDS,
+    comparePriority: (a, b) => a.price - b.price,
+  });
+
+  const asks = useOrders({
+    storeKey: StoreKey.ASKS,
+    comparePriority: (a, b) => b.price - a.price,
+  });
 
   const { clearingPrice, clearingVolume } = clearAuction(bids.list, asks.list);
 
