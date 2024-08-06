@@ -17,8 +17,8 @@ const Chart = ({ asks, bids }: ChartProps) => {
     if (ref.current) {
       d3.select(ref.current).selectAll("*").remove();
 
-      const data = prepareChartData(bids, asks);
       const { clearingPrice, clearingVolume } = clearAuction(bids, asks);
+      const data = prepareChartData(bids, asks, clearingVolume);
 
       if (!data.length) {
         return;
@@ -91,13 +91,13 @@ const Chart = ({ asks, bids }: ChartProps) => {
         .line<ChartData>()
         .x((d) => x(d.price))
         .y((d) => y(d.bidVolume))
-        .curve(d3.curveLinear);
+        .curve(d3.curveStepBefore);
 
       const askLine = d3
         .line<ChartData>()
         .x((d) => x(d.price))
         .y((d) => y(d.askVolume))
-        .curve(d3.curveLinear);
+        .curve(d3.curveStepAfter);
 
       // Add bids line
       svg
@@ -105,6 +105,24 @@ const Chart = ({ asks, bids }: ChartProps) => {
         .datum(data)
         .attr("fill", "none")
         .attr("stroke", "green")
+        .attr("stroke-width", 2)
+        .attr("d", bidLine);
+
+      // Add asks line
+      svg
+        .append("path")
+        .datum(data)
+        .attr("fill", "none")
+        .attr("stroke", "red")
+        .attr("stroke-width", 2)
+        .attr("d", askLine);
+
+      // Add Maximal volume line
+      svg
+        .append("path")
+        .datum(data.filter((item) => !!item.clearingVolume))
+        .attr("fill", "none")
+        .attr("stroke", "orange")
         .attr("stroke-width", 2)
         .attr("d", bidLine);
 
@@ -119,15 +137,6 @@ const Chart = ({ asks, bids }: ChartProps) => {
         .attr("cy", (d) => y(d.bidVolume))
         .attr("r", 3)
         .attr("fill", "green");
-
-      // Add asks line
-      svg
-        .append("path")
-        .datum(data)
-        .attr("fill", "none")
-        .attr("stroke", "red")
-        .attr("stroke-width", 2)
-        .attr("d", askLine);
 
       // Add red points on asks line
       svg
@@ -185,17 +194,10 @@ const Chart = ({ asks, bids }: ChartProps) => {
         .attr("r", 5)
         .attr("fill", "orange");
 
-      svg
-        .append("text")
-        .attr("x", x(clearingPrice) + 10)
-        .attr("y", y(clearingVolume) - 10)
-        .attr("fill", "orange")
-        .text("Maximal volume");
-
       // Add legend background
       const legend = svg
         .append("g")
-        .attr("transform", `translate(${width - 150}, 20)`)
+        .attr("transform", `translate(${width - 160}, 20)`)
         .attr("class", "legend");
 
       legend

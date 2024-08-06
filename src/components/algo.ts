@@ -46,9 +46,14 @@ export type ChartData = {
   price: number;
   bidVolume: number;
   askVolume: number;
+  clearingVolume?: number;
 };
 
-export function prepareChartData(bids: Order[], asks: Order[]): ChartData[] {
+export function prepareChartData(
+  bids: Order[],
+  asks: Order[],
+  clearingVolume: number
+): ChartData[] {
   const data: ChartData[] = [];
 
   let cumulativeBidVolume = 0;
@@ -75,6 +80,7 @@ export function prepareChartData(bids: Order[], asks: Order[]): ChartData[] {
       price,
       bidVolume: cumulativeBidVolume,
       askVolume: cumulativeAskVolume,
+      ...(cumulativeBidVolume === cumulativeAskVolume && { clearingVolume }),
     });
   }
 
