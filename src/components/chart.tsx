@@ -140,35 +140,11 @@ const Chart = ({ asks, bids }: ChartProps) => {
       // Add Maximal volume line
       svg
         .append("path")
-        .datum(data.filter((item) => !!item.clearingVolume))
+        .datum(data.filter((item) => item.maximalVolume))
         .attr("fill", "none")
         .attr("stroke", "orange")
         .attr("stroke-width", 2)
-        .attr("d", bidLine);
-
-      // Add green points on bids line
-      svg
-        .selectAll(".bid-circle")
-        .data(data.filter((item) => item.actualBid))
-        .enter()
-        .append("circle")
-        .attr("class", "bid-circle")
-        .attr("cx", (d) => x(d.price))
-        .attr("cy", (d) => y(d.bidVolume))
-        .attr("r", 3)
-        .attr("fill", "green");
-
-      // Add red points on asks line
-      svg
-        .selectAll(".ask-circle")
-        .data(data.filter((item) => item.actualAsk))
-        .enter()
-        .append("circle")
-        .attr("class", "ask-circle")
-        .attr("cx", (d) => x(d.price))
-        .attr("cy", (d) => y(d.askVolume))
-        .attr("r", 3)
-        .attr("fill", "red");
+        .attr("d", askLine);
 
       if (clearingVolume !== 0) {
         // Add Clearing price line
@@ -206,13 +182,82 @@ const Chart = ({ asks, bids }: ChartProps) => {
           .text("Clearing volume");
       }
 
-      // Add Maximal volume point
+      // Add green points on bids line
+      svg
+        .selectAll(".bid-circle")
+        .data(data.filter((item) => item.actualBid))
+        .enter()
+        .append("circle")
+        .attr("class", "bid-circle")
+        .attr("cx", (d) => x(d.price))
+        .attr("cy", (d) => y(d.bidVolume))
+        .attr("r", 3)
+        .attr("fill", "green");
+
+      // Add red points on asks line
+      svg
+        .selectAll(".ask-circle")
+        .data(data.filter((item) => item.actualAsk))
+        .enter()
+        .append("circle")
+        .attr("class", "ask-circle")
+        .attr("cx", (d) => x(d.price))
+        .attr("cy", (d) => y(d.askVolume))
+        .attr("r", 3)
+        .attr("fill", "red");
+
+      // Add intersection points
+      const intersectionData = data.filter(
+        (d) => d.actualAsk && d.actualBid && d.askVolume === d.bidVolume
+      );
+
+      const intersectionGroup = svg
+        .selectAll(".intersection-circle")
+        .data(intersectionData)
+        .enter()
+        .append("g")
+        .attr(
+          "transform",
+          (d) => `translate(${x(d.price)}, ${y(d.askVolume)}) rotate(45)`
+        ); // Rotate group by 45 degrees
+
+      const arcGenerator = d3.arc<d3.DefaultArcObject>();
+
+      intersectionGroup
+        .append("path")
+        .attr(
+          "d",
+          arcGenerator({
+            innerRadius: 0,
+            outerRadius: 4,
+            startAngle: 0,
+            endAngle: Math.PI,
+          })
+        )
+        .attr("fill", "red");
+
+      intersectionGroup
+        .append("path")
+        .attr(
+          "d",
+          arcGenerator({
+            innerRadius: 0,
+            outerRadius: 4,
+            startAngle: Math.PI,
+            endAngle: 2 * Math.PI,
+          })
+        )
+        .attr("fill", "green");
+
+      // Add Clearing volume point
       svg
         .append("circle")
         .attr("cx", x(clearingPrice))
         .attr("cy", y(clearingVolume))
-        .attr("r", 5)
-        .attr("fill", "orange");
+        .attr("r", 7)
+        .attr("fill", "none")
+        .attr("stroke", "orange")
+        .attr("stroke-width", 2);
 
       // Add legend background
       const legend = svg
