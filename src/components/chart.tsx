@@ -108,6 +108,16 @@ const Chart = ({ asks, bids }: ChartProps) => {
         .attr("stroke-width", 2)
         .attr("d", bidLine);
 
+      // Add line to connect bid line to x-axis
+      svg
+        .append("line")
+        .attr("x1", x(data[data.length - 1].price))
+        .attr("y1", y(data[data.length - 1].bidVolume))
+        .attr("x2", x(data[data.length - 1].price))
+        .attr("y2", y(0))
+        .attr("stroke", "green")
+        .attr("stroke-width", 2);
+
       // Add asks line
       svg
         .append("path")
@@ -116,6 +126,16 @@ const Chart = ({ asks, bids }: ChartProps) => {
         .attr("stroke", "red")
         .attr("stroke-width", 2)
         .attr("d", askLine);
+
+      // Add line to connect ask line to x-axis
+      svg
+        .append("line")
+        .attr("x1", x(data[0].price))
+        .attr("y1", y(data[0].askVolume))
+        .attr("x2", x(data[0].price))
+        .attr("y2", y(0))
+        .attr("stroke", "red")
+        .attr("stroke-width", 2);
 
       // Add Maximal volume line
       svg
