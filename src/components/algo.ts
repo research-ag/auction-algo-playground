@@ -46,6 +46,8 @@ export type ChartData = {
   price: number;
   bidVolume: number;
   askVolume: number;
+  actualBid: boolean;
+  actualAsk: boolean;
   clearingVolume?: number;
 };
 
@@ -78,6 +80,8 @@ export function prepareChartData(
       price,
       bidVolume: cumulativeBidVolume,
       askVolume: cumulativeAskVolume,
+      actualBid: bids.some((v) => v.price === price),
+      actualAsk: asks.some((v) => v.price === price),
       ...(cumulativeBidVolume === cumulativeAskVolume && { clearingVolume }),
     });
   }

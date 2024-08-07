@@ -149,7 +149,7 @@ const Chart = ({ asks, bids }: ChartProps) => {
       // Add green points on bids line
       svg
         .selectAll(".bid-circle")
-        .data(data)
+        .data(data.filter((item) => item.actualBid))
         .enter()
         .append("circle")
         .attr("class", "bid-circle")
@@ -161,7 +161,7 @@ const Chart = ({ asks, bids }: ChartProps) => {
       // Add red points on asks line
       svg
         .selectAll(".ask-circle")
-        .data(data)
+        .data(data.filter((item) => item.actualAsk))
         .enter()
         .append("circle")
         .attr("class", "ask-circle")
