@@ -60,13 +60,11 @@ export function prepareChartData(
   let cumulativeAskVolume = 0;
 
   // Extract unique prices from both bids and asks
-  let prices = Array.from(
+  const prices = Array.from(
     new Set([...bids.map((b) => b.price), ...asks.map((a) => a.price)])
   );
 
   prices.sort((a, b) => a - b);
-
-  prices = prices.length ? [0, ...prices] : [];
 
   for (let price of prices) {
     cumulativeBidVolume = bids
