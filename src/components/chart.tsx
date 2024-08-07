@@ -262,7 +262,7 @@ const Chart = ({ asks, bids }: ChartProps) => {
       // Add legend background
       const legend = svg
         .append("g")
-        .attr("transform", `translate(${width - 160}, 20)`)
+        .attr("transform", `translate(${width - 160}, 30)`)
         .attr("class", "legend");
 
       legend
@@ -270,9 +270,9 @@ const Chart = ({ asks, bids }: ChartProps) => {
         .attr("x", -10)
         .attr("y", -10)
         .attr("width", 200)
-        .attr("height", 80)
+        .attr("height", 170)
         .attr("fill", "white")
-        .attr("stroke", "black")
+        .attr("stroke", "gray")
         .attr("fill-opacity", 0.7);
 
       // Add legend items
@@ -290,7 +290,7 @@ const Chart = ({ asks, bids }: ChartProps) => {
         .attr("x", 35)
         .attr("y", 10)
         .attr("dy", "0.35em")
-        .attr("fill", "green")
+        .attr("fill", "black")
         .text("Bids");
 
       legend
@@ -307,23 +307,115 @@ const Chart = ({ asks, bids }: ChartProps) => {
         .attr("x", 35)
         .attr("y", 30)
         .attr("dy", "0.35em")
-        .attr("fill", "red")
+        .attr("fill", "black")
         .text("Asks");
 
+      // Actual bid
       legend
         .append("circle")
         .attr("cx", 20)
         .attr("cy", 50)
-        .attr("r", 5)
-        .attr("fill", "orange");
+        .attr("r", 3)
+        .attr("fill", "green");
 
       legend
         .append("text")
         .attr("x", 35)
         .attr("y", 50)
         .attr("dy", "0.35em")
-        .attr("fill", "orange")
-        .text("Maximal volume");
+        .attr("fill", "black")
+        .text("Actual bid");
+
+      // Actual ask
+      legend
+        .append("circle")
+        .attr("cx", 20)
+        .attr("cy", 70)
+        .attr("r", 3)
+        .attr("fill", "red");
+
+      legend
+        .append("text")
+        .attr("x", 35)
+        .attr("y", 70)
+        .attr("dy", "0.35em")
+        .attr("fill", "black")
+        .text("Actual ask");
+
+      // Actual bid & ask (half green, half red)
+      const intersectionGroupLegend = legend
+        .append("g")
+        .attr("transform", "translate(20, 90) rotate(45)");
+
+      intersectionGroupLegend
+        .append("path")
+        .attr(
+          "d",
+          arcGenerator({
+            innerRadius: 0,
+            outerRadius: 5,
+            startAngle: 0,
+            endAngle: Math.PI,
+          })
+        )
+        .attr("fill", "red");
+
+      intersectionGroupLegend
+        .append("path")
+        .attr(
+          "d",
+          arcGenerator({
+            innerRadius: 0,
+            outerRadius: 5,
+            startAngle: Math.PI,
+            endAngle: 2 * Math.PI,
+          })
+        )
+        .attr("fill", "green");
+
+      legend
+        .append("text")
+        .attr("x", 35)
+        .attr("y", 90)
+        .attr("dy", "0.35em")
+        .attr("fill", "black")
+        .text("Actual bid & ask");
+
+      // Max volume range
+      legend
+        .append("line")
+        .attr("x1", 10)
+        .attr("y1", 110)
+        .attr("x2", 30)
+        .attr("y2", 110)
+        .attr("stroke", "orange")
+        .attr("stroke-width", 2);
+
+      legend
+        .append("text")
+        .attr("x", 35)
+        .attr("y", 110)
+        .attr("dy", "0.35em")
+        .attr("fill", "black")
+        .text("Max volume range");
+
+      // Clearing volume
+      legend
+        .append("circle")
+        .attr("cx", 20)
+        .attr("cy", 130)
+        .attr("r", 7)
+        .attr("fill", "none")
+        .attr("stroke", "orange")
+        .attr("stroke-width", 2);
+
+      legend
+        .append("text")
+        .attr("x", 35)
+        .attr("y", 130)
+        .attr("dy", "0.35em")
+        .attr("fill", "black")
+        .text("Clearing volume");
 
       svg.selectAll("text").attr("font-size", "14px");
     }
