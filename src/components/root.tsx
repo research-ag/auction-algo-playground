@@ -1,12 +1,16 @@
+import { useRef } from "react";
 import { Box, Divider, Button } from "@mui/joy";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 import { StoreKey, useOrders } from "./orders";
 import OrderList from "./order-list";
 import { clearAuction } from "./algo";
-import Chart from "./chart";
+import Chart, { ChartHandle } from "./chart";
 import CopyButton from "./copy-button";
 
 const Root = () => {
+  const chartRef = useRef<ChartHandle>(null);
+
   const bids = useOrders({
     storeKey: StoreKey.BIDS,
     comparePriority: (a, b) => a.price - b.price,
@@ -47,8 +51,9 @@ const Root = () => {
           <Box>
             Clearing price: {clearingPrice}; Volume: {clearingVolume}
           </Box>
-          <Box sx={{ display: "flex", gap: "16px" }}>
+          <Box sx={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
             <Button
+              sx={{ flexShrink: 0 }}
               size="sm"
               variant="outlined"
               onClick={() => {
@@ -58,10 +63,23 @@ const Root = () => {
             >
               Clear all
             </Button>
+            <Button
+              sx={{ flexShrink: 0 }}
+              size="sm"
+              startDecorator={<FileDownloadIcon />}
+              onClick={() => {
+                console.log("ref.current", chartRef.current);
+                if (chartRef.current) {
+                  chartRef.current.downloadImage();
+                }
+              }}
+            >
+              PNG
+            </Button>
             <CopyButton />
           </Box>
         </Box>
-        <Chart asks={asks.list} bids={bids.list} />
+        <Chart ref={chartRef} asks={asks.list} bids={bids.list} />
       </Box>
     </Box>
   );

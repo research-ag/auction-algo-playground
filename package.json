@@ -8,6 +8,7 @@
     "build:frontend": "tsc && vite build"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
     "@types/node": "^22.1.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
@@ -27,6 +28,7 @@
     "@mui/joy": "^5.0.0-beta.48",
     "@mui/material": "^5.16.6",
     "@types/d3": "^7.4.3",
+    "crypto-js": "^4.2.0",
     "d3": "^7.9.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
