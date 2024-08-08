@@ -30,7 +30,7 @@ const Root = () => {
           maxWidth: "900px",
           width: "100%",
           margin: "0 auto",
-          padding: { xs: "20px", md: "60px 20px 40px" },
+          padding: { xs: "20px", md: "40px 20px" },
         }}
       >
         <Box sx={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
@@ -49,7 +49,7 @@ const Root = () => {
           }}
         >
           <Box>
-            Clearing price: {priceRange[0]}; Volume: {clearingVolume}
+            Clearing price: {priceRange[0]}; Clearing volume: {clearingVolume}
           </Box>
           <Box sx={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
             <Button

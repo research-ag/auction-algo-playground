@@ -102,7 +102,7 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
           return;
         }
 
-        const margin = { top: 20, right: 40, bottom: 50, left: 50 };
+        const margin = { top: 20, right: 0, bottom: 70, left: 50 };
         const width = 800 - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
 
@@ -266,13 +266,6 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
             .attr("stroke", "gray")
             .attr("stroke-dasharray", "4");
 
-          svg
-            .append("text")
-            .attr("x", x(clearingPrice) + 5)
-            .attr("y", y(0) - 5)
-            .attr("fill", "gray")
-            .text("Clearing price");
-
           // Add Clearing volume line
           svg
             .append("line")
@@ -283,13 +276,6 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
             .attr("stroke", "gray")
             .attr("stroke-dasharray", "4");
 
-          svg
-            .append("text")
-            .attr("x", x(xDomain[0]) + 5)
-            .attr("y", y(clearingVolume) - 5)
-            .attr("fill", "gray")
-            .text("Clearing volume");
-
           // Add Clearing volume point
           svg
             .append("circle")
@@ -299,23 +285,16 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
             .attr("fill", "orange");
         }
 
-        // Add legend background
+        // Add legend below the chart
         const legend = svg
           .append("g")
-          .attr("transform", `translate(${width - 160}, 30)`)
+          .attr(
+            "transform",
+            `translate(${width / 2 - 252}, ${height + margin.top + 30})`
+          )
           .attr("class", "legend");
 
-        legend
-          .append("rect")
-          .attr("x", -10)
-          .attr("y", -10)
-          .attr("width", 200)
-          .attr("height", 170)
-          .attr("fill", "white")
-          .attr("stroke", "gray")
-          .attr("fill-opacity", 0.7);
-
-        // Add legend items
+        // Bids item
         legend
           .append("line")
           .attr("x1", 10)
@@ -327,60 +306,57 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
 
         legend
           .append("text")
-          .attr("x", 35)
-          .attr("y", 10)
-          .attr("dy", "0.35em")
+          .attr("x", 40)
+          .attr("y", 15)
           .attr("fill", "black")
           .text("Bids");
 
+        // Asks item
         legend
           .append("line")
-          .attr("x1", 10)
-          .attr("y1", 30)
-          .attr("x2", 30)
-          .attr("y2", 30)
+          .attr("x1", 100)
+          .attr("y1", 10)
+          .attr("x2", 120)
+          .attr("y2", 10)
           .attr("stroke", "red")
           .attr("stroke-width", 2);
 
         legend
           .append("text")
-          .attr("x", 35)
-          .attr("y", 30)
-          .attr("dy", "0.35em")
+          .attr("x", 130)
+          .attr("y", 15)
           .attr("fill", "black")
           .text("Asks");
 
-        // Max volume range
+        // Max volume range item
         legend
           .append("line")
-          .attr("x1", 10)
-          .attr("y1", 110)
-          .attr("x2", 30)
-          .attr("y2", 110)
+          .attr("x1", 190)
+          .attr("y1", 10)
+          .attr("x2", 210)
+          .attr("y2", 10)
           .attr("stroke", "orange")
           .attr("stroke-width", 2);
 
         legend
           .append("text")
-          .attr("x", 35)
-          .attr("y", 110)
-          .attr("dy", "0.35em")
+          .attr("x", 220)
+          .attr("y", 15)
           .attr("fill", "black")
           .text("Max volume range");
 
-        // Clearing volume
+        // Clearing volume item
         legend
           .append("circle")
-          .attr("cx", 20)
-          .attr("cy", 130)
+          .attr("cx", 365)
+          .attr("cy", 10)
           .attr("r", 5)
           .attr("fill", "orange");
 
         legend
           .append("text")
-          .attr("x", 35)
-          .attr("y", 130)
-          .attr("dy", "0.35em")
+          .attr("x", 378)
+          .attr("y", 15)
           .attr("fill", "black")
           .text("Clearing volume");
 
