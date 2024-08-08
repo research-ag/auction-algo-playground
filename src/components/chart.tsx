@@ -111,10 +111,15 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
           .append("g")
           .attr("transform", `translate(${margin.left},${margin.top})`);
 
-        const x = d3
-          .scaleLinear()
-          .domain([0, d3.max(data, (d) => d.price) ?? 0])
-          .range([0, width]);
+        const minPrice = d3.min(data, (d) => d.price)!;
+        const maxPrice = d3.max(data, (d) => d.price)!;
+        const xDomainMargin = Math.min(
+          minPrice,
+          Math.ceil((maxPrice - minPrice) * 0.1)
+        );
+        const xDomain = [minPrice - xDomainMargin, maxPrice + xDomainMargin];
+
+        const x = d3.scaleLinear().domain(xDomain).range([0, width]);
 
         const y = d3
           .scaleLinear()
@@ -251,7 +256,7 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
           // Add Clearing volume line
           svg
             .append("line")
-            .attr("x1", x(0))
+            .attr("x1", x(xDomain[0]))
             .attr("y1", y(clearingVolume))
             .attr("x2", x(clearingPrice))
             .attr("y2", y(clearingVolume))
@@ -260,7 +265,7 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
 
           svg
             .append("text")
-            .attr("x", x(0) + 5)
+            .attr("x", x(xDomain[0]) + 5)
             .attr("y", y(clearingVolume) - 5)
             .attr("fill", "gray")
             .text("Clearing volume");
@@ -333,15 +338,17 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
           )
           .attr("fill", "green");
 
-        // Add Clearing volume point
-        svg
-          .append("circle")
-          .attr("cx", x(clearingPrice))
-          .attr("cy", y(clearingVolume))
-          .attr("r", 7)
-          .attr("fill", "none")
-          .attr("stroke", "orange")
-          .attr("stroke-width", 2);
+        if (clearingVolume !== 0) {
+          // Add Clearing volume point
+          svg
+            .append("circle")
+            .attr("cx", x(clearingPrice))
+            .attr("cy", y(clearingVolume))
+            .attr("r", 7)
+            .attr("fill", "none")
+            .attr("stroke", "orange")
+            .attr("stroke-width", 2);
+        }
 
         // Add legend background
         const legend = svg
