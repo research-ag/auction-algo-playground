@@ -207,6 +207,16 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
           .attr("stroke", "green")
           .attr("stroke-width", 2);
 
+        // Extend the bid line to the left minimum of the domain
+        svg
+          .append("line")
+          .attr("x1", x(data[0].price))
+          .attr("y1", y(data[0].bidVolume))
+          .attr("x2", x(xDomain[0]))
+          .attr("y2", y(data[0].bidVolume))
+          .attr("stroke", "green")
+          .attr("stroke-width", 2);
+
         // Add asks line
         svg
           .append("path")
@@ -223,6 +233,16 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
           .attr("y1", y(data[0].askVolume))
           .attr("x2", x(data[0].price))
           .attr("y2", y(0))
+          .attr("stroke", "red")
+          .attr("stroke-width", 2);
+
+        // Extend the ask line to the right maximum of the domain
+        svg
+          .append("line")
+          .attr("x1", x(data[data.length - 1].price))
+          .attr("y1", y(data[data.length - 1].askVolume))
+          .attr("x2", x(xDomain[1]))
+          .attr("y2", y(data[data.length - 1].askVolume))
           .attr("stroke", "red")
           .attr("stroke-width", 2);
 
