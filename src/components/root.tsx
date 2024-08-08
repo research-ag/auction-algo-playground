@@ -21,7 +21,7 @@ const Root = () => {
     comparePriority: (a, b) => b.price - a.price,
   });
 
-  const { clearingPrice, clearingVolume } = clearAuction(bids.list, asks.list);
+  const { priceRange, clearingVolume } = clearAuction(bids.list, asks.list);
 
   return (
     <Box>
@@ -49,7 +49,7 @@ const Root = () => {
           }}
         >
           <Box>
-            Clearing price: {clearingPrice}; Volume: {clearingVolume}
+            Clearing price: {priceRange[0]}; Volume: {clearingVolume}
           </Box>
           <Box sx={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
             <Button

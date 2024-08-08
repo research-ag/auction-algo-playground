@@ -94,8 +94,9 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
       if (svgRef.current) {
         d3.select(svgRef.current).selectAll("*").remove();
 
-        const { clearingPrice, clearingVolume } = clearAuction(bids, asks);
-        const data = prepareChartData(bids, asks, clearingVolume);
+        const { priceRange, clearingVolume } = clearAuction(bids, asks);
+        const clearingPrice = priceRange[0];
+        const data = prepareChartData(bids, asks, priceRange, clearingVolume);
 
         if (!data.length) {
           return;
@@ -176,6 +177,12 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
           .y((d) => y(d.askVolume))
           .curve(d3.curveStepAfter);
 
+        const maximalVolumeLine = d3
+          .line<ChartData>()
+          .x((d) => x(d.price))
+          .y((d) => y(d.maximalVolume!))
+          .curve(d3.curveStepAfter);
+
         // Add bids line
         svg
           .append("path")
@@ -221,7 +228,7 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
           .attr("fill", "none")
           .attr("stroke", "orange")
           .attr("stroke-width", 2)
-          .attr("d", askLine);
+          .attr("d", maximalVolumeLine);
 
         if (clearingVolume !== 0) {
           // Add Clearing price line

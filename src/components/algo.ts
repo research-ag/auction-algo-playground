@@ -14,7 +14,7 @@ class Index {
 }
 
 export function clearAuction(bids: Order[], asks: Order[]) {
-  let clearingPrice = 0;
+  let priceRange: [number, number] = [0, 0];
   let cumulativeBidVolume = 0;
   let cumulativeAskVolume = 0;
   const bidSide = new Index();
@@ -26,7 +26,7 @@ export function clearAuction(bids: Order[], asks: Order[]) {
 
     if (bid.price < ask.price) break;
 
-    clearingPrice = ask.price;
+    priceRange = [ask.price, bid.price];
 
     if (bidSide.isNew) cumulativeBidVolume += bid.quantity;
     if (askSide.isNew) cumulativeAskVolume += ask.quantity;
@@ -37,7 +37,7 @@ export function clearAuction(bids: Order[], asks: Order[]) {
   }
 
   return {
-    clearingPrice,
+    priceRange,
     clearingVolume: Math.min(cumulativeBidVolume, cumulativeAskVolume),
   };
 }
@@ -48,12 +48,13 @@ export type ChartData = {
   askVolume: number;
   actualBid: boolean;
   actualAsk: boolean;
-  maximalVolume: boolean;
+  maximalVolume?: number;
 };
 
 export function prepareChartData(
   bids: Order[],
   asks: Order[],
+  priceRange: [number, number],
   clearingVolume: number
 ): ChartData[] {
   const data: ChartData[] = [];
@@ -83,8 +84,9 @@ export function prepareChartData(
       actualBid: bids.some((v) => v.price === price),
       actualAsk: asks.some((v) => v.price === price),
       maximalVolume:
-        cumulativeAskVolume === clearingVolume &&
-        cumulativeAskVolume <= cumulativeBidVolume,
+        price >= priceRange[0] && price <= priceRange[1]
+          ? clearingVolume
+          : undefined,
     });
   }
 
