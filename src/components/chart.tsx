@@ -44,8 +44,9 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
         if (context) {
-          canvas.width = 1280;
-          canvas.height = 720;
+          canvas.width = 1220;
+          canvas.height = 600;
+
           const svgBBox = svgElement.getBBox();
           const scale = Math.min(
             canvas.width / svgBBox.width,
@@ -102,7 +103,7 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
           return;
         }
 
-        const margin = { top: 20, right: 0, bottom: 70, left: 50 };
+        const margin = { top: 10, right: 0, bottom: 70, left: 50 };
         const width = 800 - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
 
@@ -364,7 +365,7 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
           .append("g")
           .attr(
             "transform",
-            `translate(${width / 2 - 252}, ${height + margin.top + 30})`
+            `translate(${width / 2 - 252}, ${height + margin.top + 40})`
           )
           .attr("class", "legend");
 

@@ -30,7 +30,7 @@ const Root = () => {
           maxWidth: "900px",
           width: "100%",
           margin: "0 auto",
-          padding: { xs: "20px", md: "40px 20px" },
+          padding: { xs: "20px", md: "20px 20px 10px" },
         }}
       >
         <Box sx={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
