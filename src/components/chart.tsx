@@ -341,7 +341,7 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
             .attr("stroke", "gray")
             .attr("stroke-dasharray", "4");
 
-          // Add Clearing volume line
+          // Add Clearing price line
           svg
             .append("line")
             .attr("x1", x(xDomain[0]))
@@ -351,7 +351,7 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
             .attr("stroke", "gray")
             .attr("stroke-dasharray", "4");
 
-          // Add Clearing volume point
+          // Add Clearing price point
           svg
             .append("circle")
             .attr("cx", x(clearingPrice))
@@ -420,7 +420,7 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
           .attr("fill", "black")
           .text("Max volume range");
 
-        // Clearing volume item
+        // Clearing price item
         legend
           .append("circle")
           .attr("cx", 365)
@@ -433,7 +433,7 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
           .attr("x", 378)
           .attr("y", 15)
           .attr("fill", "black")
-          .text("Clearing volume");
+          .text("Clearing price");
 
         svg
           .selectAll("text")
