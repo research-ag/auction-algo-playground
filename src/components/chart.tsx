@@ -170,6 +170,80 @@ const Chart = forwardRef<ChartHandle, ChartProps>(
 
         svg.append("g").call(yAxis);
 
+        const bidArea = d3
+          .area<ChartData>()
+          .x((d) => x(d.price))
+          .y0(y(0))
+          .y1((d) => y(d.bidVolume))
+          .curve(d3.curveStepBefore);
+
+        const askArea = d3
+          .area<ChartData>()
+          .x((d) => x(d.price))
+          .y0(y(0))
+          .y1((d) => y(d.askVolume))
+          .curve(d3.curveStepAfter);
+
+        const intersectionBidArea = d3
+          .area<ChartData>()
+          .x((d) => x(d.price))
+          .y0((d) => y(Math.min(d.bidVolume, d.askVolume)))
+          .y1((d) => y(0))
+          .curve(d3.curveStepBefore);
+
+        const intersectionAskArea = d3
+          .area<ChartData>()
+          .x((d) => x(d.price))
+          .y0((d) => y(Math.min(d.bidVolume, d.askVolume)))
+          .y1((d) => y(0))
+          .curve(d3.curveStepAfter);
+
+        // Add light green fill under bids
+        svg
+          .append("path")
+          .datum([
+            {
+              price: xDomain[0],
+              bidVolume: data[0].bidVolume,
+              askVolume: 0,
+              actualAsk: false,
+              actualBid: false,
+            } as ChartData,
+            ...data,
+          ])
+          .attr("fill", "#dbffdb")
+          .attr("d", bidArea);
+
+        // Add light red fill under asks
+        svg
+          .append("path")
+          .datum([
+            ...data,
+            {
+              price: xDomain[1],
+              bidVolume: 0,
+              askVolume: data[data.length - 1].askVolume,
+              actualAsk: false,
+              actualBid: false,
+            } as ChartData,
+          ])
+          .attr("fill", "#ffeeee")
+          .attr("d", askArea);
+
+        // Add light orange fill at intersection, part 1
+        svg
+          .append("path")
+          .datum(data.filter((item) => item.price >= clearingPrice))
+          .attr("fill", "#fff9e1")
+          .attr("d", intersectionBidArea);
+
+        // Add light orange fill at intersection part 2
+        svg
+          .append("path")
+          .datum(data.filter((item) => item.price <= clearingPrice))
+          .attr("fill", "#fff9e1")
+          .attr("d", intersectionAskArea);
+
         const bidLine = d3
           .line<ChartData>()
           .x((d) => x(d.price))
