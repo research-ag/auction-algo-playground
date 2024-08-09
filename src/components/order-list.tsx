@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Box,
   Typography,
@@ -26,19 +26,41 @@ const OrderList = ({
   addOrder,
   removeOrder,
 }: OrderListProps) => {
+  const priceRef = useRef<HTMLInputElement>(null);
+
   const [inputPrice, setInputPrice] = useState("");
   const [inputQuantity, setInputQuantity] = useState("");
 
   const [priceError, setPriceError] = useState(false);
   const [quantityError, setQuantityError] = useState(false);
 
+  const submit = (): boolean => {
+    const validate = (natStr: string) => /^[1-9]\d*$/.test(natStr);
+    const priceValid = validate(inputPrice);
+    const quantityValid = validate(inputQuantity);
+    if (!priceValid) setPriceError(true);
+    if (!quantityValid) setQuantityError(true);
+    if (priceValid && quantityValid) {
+      addOrder({
+        price: Number(inputPrice),
+        quantity: Number(inputQuantity),
+      });
+      setInputPrice("");
+      setInputQuantity("");
+      return true;
+    }
+    return false;
+  };
+
   const renderInput = ({
+    ref,
     label,
     value,
     setValue,
     error,
     setError,
   }: {
+    ref?: React.RefObject<HTMLInputElement>;
     label: string;
     value: string;
     setValue: (value: string) => void;
@@ -57,7 +79,15 @@ const OrderList = ({
           setValue(e.target.value);
           setError(false);
         }}
-        slotProps={{ input: { sx: { width: "100%", minWidth: "120px" } } }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            const success = submit();
+            if (success) priceRef.current!.focus();
+          }
+        }}
+        slotProps={{
+          input: { sx: { width: "100%", minWidth: "120px" }, ref: ref },
+        }}
       />
     </FormControl>
   );
@@ -75,6 +105,7 @@ const OrderList = ({
             setValue: setInputPrice,
             error: priceError,
             setError: setPriceError,
+            ref: priceRef,
           })}
           {renderInput({
             label: "Quantity",
@@ -88,19 +119,7 @@ const OrderList = ({
             size="sm"
             variant="solid"
             onClick={() => {
-              const validate = (natStr: string) => /^[1-9]\d*$/.test(natStr);
-              const priceValid = validate(inputPrice);
-              const quantityValid = validate(inputQuantity);
-              if (!priceValid) setPriceError(true);
-              if (!quantityValid) setQuantityError(true);
-              if (priceValid && quantityValid) {
-                addOrder({
-                  price: Number(inputPrice),
-                  quantity: Number(inputQuantity),
-                });
-                setInputPrice("");
-                setInputQuantity("");
-              }
+              submit();
             }}
           >
             <AddIcon />
